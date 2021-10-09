@@ -1,26 +1,38 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#include <stdio.h>
-#include <libmng.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdio.h>
 
-typedef char* string;
+#include <libmng.h>
 
-// this is the structure passed as a pointer to the libmng library for use in
-// callback functions.
-// make sure its memory location doesn't change!
-typedef struct mng_userdata mng_userdata;
-struct mng_userdata {
-	FILE *fileptr;
+#if (CHAR_BIT != 8)
+#	error "8-bit bytes are required."
+#endif
+typedef unsigned char byte;
+
+// represents a single pixel.
+// it is an array with predefined indices instead of a structure with named
+// fields due to the fact that the actual order (in memory) of structure fields
+// is not defined.
+typedef byte pixel[4];
+enum px_index {
+	PX_RED = 0,
+	PX_GREEN = 1,
+	PX_BLUE = 2,
+	PX_ALPHA = 3,
 };
-
-#ifndef EXIT_FAILURE
-#define EXIT_FAILURE 1
-#endif
-
-#ifndef EXIT_SUCCESS
-#define EXIT_SUCCESS 0
-#endif
+// information defining the structure of the file e.g. its resolution.
+// normally obtained before reading pixel data.
+struct metadata {
+	size_t height;
+	size_t width;
+};
+// structure holding all data necessary to reconstruct an image.
+struct image {
+	struct metadata md;
+	pixel **pixel_rows;
+};
 
 #endif

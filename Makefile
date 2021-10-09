@@ -6,7 +6,7 @@
 include config.mk
 LDFLAGS2=$(LDFLAGS) -lmng
 
-SRC=main.c mng_callbacks.c mng_userdata.c
+SRC=main.c image.c malloc2.c
 OBJ=$(SRC:.c=.o)
 
 all: mng2png
@@ -17,10 +17,9 @@ clean:
 mng2png: $(OBJ)
 	$(CC) $(LDFLAGS2) -o $@ $(OBJ)
 
-main.o: main.c types.h mng_callbacks.h mng_userdata.h
-mng_userdata.h: types.h
-mng_callbacks.o: mng_callbacks.c types.h mng_callbacks.h mng_userdata.h
-mng_userdata.o: mng_userdata.c types.h mng_userdata.h
+main.o: main.c types.h err.h image.h
+malloc2.o: malloc2.c malloc2.h err.h
+image.o: image.c image.h err.h malloc2.h types.h
 
 .c.o:
 	$(CC) $(CFLAGS) -o $@ -c $<
