@@ -48,7 +48,8 @@ alloc_rows(
 	// isn't enough memory and will instead just kill the program e.g.
 	// Linux.
 	for (size_t i = 0; i < nrows; i++) {
-		imgp->pixel_rows[i] = malloc2(px_per_row, px_sz);
+		// calloc to initialize all pixel components to 0.
+		imgp->pixel_rows[i] = calloc(px_per_row, px_sz);
 		if (imgp->pixel_rows[i] == NULL) {
 			// have to walk back through all the already-allocated
 			// rows to free them...
