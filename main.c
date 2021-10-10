@@ -13,9 +13,9 @@ main(
 {
 	const char mng_fname[] = "0000.mng"; // TODO: parse from argv.
 	// open mng file.
-	FILE *mng_fp = fopen(mng_fname, "r");
+	FILE *mng_fp = fopen(mng_fname, "rb");
 	if (mng_fp == NULL) {
-		ERRF("fopen(%s, r) on mng file failed.\n", mng_fname);
+		ERRF("fopen(%s, rb) on mng file failed.\n", mng_fname);
 		return 1;
 	}
 	// initialize mngfile structure from open file.

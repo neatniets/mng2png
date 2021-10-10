@@ -4,7 +4,7 @@
 #include "types.h"
 
 // initialize the mngfile for use.
-// file pointer must be opened for reading.
+// file pointer must be opened for reading a binary file.
 enum mngf_retcode
 mngf_init(
 	struct mngfile *mfp,
