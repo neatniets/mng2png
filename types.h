@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include <libmng.h>
+#include <png.h>
 
 #if (CHAR_BIT != 8)
 #	error "8-bit bytes are required."
@@ -60,6 +61,13 @@ enum mngf_retcode {
 	MNGF_OK,
 	MNGF_ERR,
 	MNGF_EOF,
+};
+
+// data needed to write a PNG file.
+struct pngfile {
+	FILE *fp;
+	png_structp write_ptr;
+	png_infop info_ptr;
 };
 
 #endif
