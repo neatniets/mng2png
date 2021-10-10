@@ -72,9 +72,11 @@ cb_getcanvasline(
 	mng_uint32 lineno)
 {
 	struct mngfile *mfp = mng_get_userdata(mh);
-	verbf("writing pixel row %zu of %zu:\t%lf%%.\n",
+
+	/*verbf("%zu/%zu rows: %.2lf%%.\n",
 		lineno, mfp->imgp->md.height,
-		(double)lineno / mfp->imgp->md.height);
+		(double)lineno / mfp->imgp->md.height * 100);*/
+
 	// image pointer should be populated by now.
 	// the canvas style should be set to RGBA8, so we can pass the pixel
 	// rows directly.
@@ -211,7 +213,7 @@ mngf_read_img(
 	// prepare userdata.
 	mfp->imgp = imgp;
 	mng_set_userdata(mfp->mh, mfp);
-	verb("writing next MNG frame.\n");
+	verbf("new MNG frame @ %zu ticks.\n", mfp->ticks);
 	// "display" frame into the image struct.
 	//
 	// TODO: a static array of function pointers to both display functions
@@ -240,7 +242,6 @@ mngf_read_img(
 		mfp->imgp = NULL;
 		return MNGF_ERR;
 	}
-	verb("finished writing MNG frame.\n");
 	mfp->imgp = NULL;
 	return MNGF_OK;
 }

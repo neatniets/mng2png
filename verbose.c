@@ -20,7 +20,6 @@ verbf(
 		return;
 	}
 
-	fputs("info: ", stdout);
 	va_list ap;
 	va_start(ap, fmt);
 	vprintf(fmt, ap);

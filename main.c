@@ -4,6 +4,7 @@
 #include "image.h"
 #include "mngfile.h"
 #include "types.h"
+#include "verbose.h"
 
 int
 main(
@@ -25,9 +26,25 @@ main(
 		return 1; // exiting, so no frees required.
 	}
 
-	// for now, just test destruction of mngfile structure.
-	mngf_clear(&mngf);
+	// read metadata & create image struct.
+	struct metadata md;
+	mngf_read_md(&mngf, &md);
+	struct image img;
+	img_init(&img, &md);
 
+	size_t num_frames = 0;
+	do {
+		rc = mngf_read_img(&mngf, &img);
+		num_frames++;
+	} while (rc == MNGF_OK);
+	if (rc == MNGF_ERR) {
+		ERRF("failed to read %zu-th frame.\n", num_frames);
+		return 1;
+	}
+	verbf("%zu MNG frames read.\n", num_frames);
+
+	mngf_clear(&mngf);
+	img_clear(&img);
 	fclose(mng_fp);
 	return 0;
 }
