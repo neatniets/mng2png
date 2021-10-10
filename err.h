@@ -7,7 +7,8 @@
 // to find the location the error was triggered in the source.
 // the format string and the message string MUST be string literals.
 #define ERRF(fmt, ...) \
-	fprintf(stderr, __FILE__":%u: %s: "fmt, __LINE__, __func__, __VA_ARGS__)
+	fprintf(stderr, "error: "__FILE__":%u: %s: "fmt, __LINE__, __func__, \
+		__VA_ARGS__)
 #define ERR(msg) \
 	ERRF(msg"%s", "")
 

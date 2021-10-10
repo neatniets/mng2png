@@ -35,4 +35,31 @@ struct image {
 	pixel **pixel_rows;
 };
 
+// data needed to read an MNG file.
+struct mngfile {
+	FILE *fp;
+	mng_handle mh;
+	struct image *imgp; // ptr to image to be written to.
+	// ticks starts at 0 and only increments to a value that libmng asks for
+	// to draw the next frame since we're "reading" frames instead of
+	// actually displaying them.
+	mng_uint32 ticks;
+	// metadata might want to be obtained a second time, but the
+	// processheader() callback is only called once and thus can only fill a
+	// single metadata object.
+	// this is circumvented by caching the metadata and just assigning this
+	// value to any requested memory location.
+	struct metadata cached_md;
+	// libmng has a separate function mng_display_resume() to be called
+	// after you've started displaying with mng_display() for some reason.
+	// this flag tells the file which function to call.
+	bool has_started_displaying : 1;
+	bool is_eof : 1;
+};
+enum mngf_retcode {
+	MNGF_OK,
+	MNGF_ERR,
+	MNGF_EOF,
+};
+
 #endif
