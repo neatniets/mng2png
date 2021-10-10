@@ -1,3 +1,4 @@
 *.o
 mng2png
-0000.mng
+*.mng
+*.png
