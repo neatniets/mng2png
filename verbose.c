@@ -3,7 +3,7 @@
 
 #include "verbose.h"
 
-bool is_verbose = true; // TODO: change default to false.
+bool is_verbose = false;
 
 void
 verb(

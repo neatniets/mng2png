@@ -16,6 +16,12 @@
 #define PNG_FNAME_BUF_LEN 1024
 static char png_fname_buf[PNG_FNAME_BUF_LEN] = "";
 
+// args from the commandline after parsing.
+static struct {
+	char *prog_name;
+	char *mng_fname;
+} args;
+
 // get the next png filename to use.
 // simply numbers them starting from 0.
 // if a filename can not fit, this will return NULL;
@@ -42,7 +48,7 @@ init_mng(
 	FILE *mng_fp = fopen(fname, "rb");
 	if (mng_fp == NULL) {
 		ERRF("fopen(%s, rb) on mng file failed.\n", fname);
-		return 1;
+		return false;
 	}
 	// initialize mngfile structure from open file.
 	enum mngf_retcode rc = mngf_init(mfp, mng_fp);
@@ -118,15 +124,84 @@ write_frames(
 	return is_error;
 }
 
+static void
+print_help(void)
+{
+	const char fmt[]
+		= "usage:\n"
+		"%s [-v] (-h | <mng-filename>)\n"
+		"\t-v - be verbose.\n"
+		"\t-h - print this help text.\n";
+	printf(fmt, args.prog_name); // prog_name should be set.
+}
+
+// parses the commandline arguments.
+static bool
+parse_args(
+	int argc,
+	char **argv)
+{
+	// TODO: should command-line errors give source line numbers like other
+	// errors?
+	// it's meant for program bugs to be detected, not necessarily user
+	// error.
+	// if the user enters the command wrong, it's not an error in the source
+	// code and clutters stdout.
+	// however, user error could also result in errors down the road, like a
+	// failed libmng initialization, so maybe there's no real way to keep
+	// the source code out of stdout on user error.
+	args.prog_name = *argv;
+	argv++;
+	argc--;
+
+	// options parsing.
+	while ((*argv != NULL) && (**argv == '-')) {
+		char *cur = *argv;
+		switch (cur[1]) {
+		case 'h':
+			print_help();
+			// TODO: getting help should exit immediately but not in
+			// error.
+			return false;
+		case 'v':
+			is_verbose = true;
+			break;
+		default:
+			ERRF("bad option: -%c.\n", cur[1]);
+			return false;
+		}
+		argv++;
+		argc--;
+	}
+
+	// required args parsing.
+	// TODO: allow more than one MNG file to be specified at a time.
+	if (*argv == NULL) {
+		ERR("specify an MNG file to convert.\n");
+		return false;
+	}
+	args.mng_fname = *argv;
+	argv++;
+	argc--;
+
+	if (argc > 0) {
+		verbf("last %d arg(s) ignored.\n", argc);
+	}
+	return true;
+}
+
 int
 main(
 	int argc,
 	char **argv)
 {
+	// parse commandline args.
+	if (!parse_args(argc, argv)) {
+		return 1;
+	}
 	// open & initialize the mng file.
-	const char mng_fname[] = "0000.mng"; // TODO: parse from argv.
 	struct mngfile mngf;
-	if (!init_mng(&mngf, mng_fname)) {
+	if (!init_mng(&mngf, args.mng_fname)) {
 		return 1;
 	}
 
