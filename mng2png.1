@@ -1,0 +1,71 @@
+.TH MNG2PNG 1 "October 2021" niets "User Commands"
+.SH NAME
+mng2png \- convert MNG to PNG(s).
+.
+.SH SYNOPSIS
+.ad l
+.nh
+.
+.B mng2png
+.RI [ options ]
+.B -h 
+.br
+.B mng2png
+.RI [ options ]
+.I mng-filename
+.
+.ad b
+.hy
+.SH DESCRIPTION
+.B mng2png
+converts an MNG file into PNG(s).
+Each frame of the MNG video is converted into a PNG using 32-bit RGBA, which is
+color type 6 and bit depth 8.
+Note that endlessly-looping MNG files are NOT detected and will continue to
+write PNG files.
+
+The PNG files are written in the directory that the command is executed from.
+They will be labeled as
+.IR number .png,
+where
+.I number
+is the MNG frame number starting from 0.
+.
+.SH OPTIONS
+.TP
+.B -h
+Print help text and exit.
+.TP
+.B -v
+Be verbose.
+More information about the processing of the program will be printed.
+.
+.SH EXIT STATUS
+.TP
+0
+Successful exit.
+.TP
+1
+Error in processing.
+.
+.SH BUGS
+Using the
+.B -h
+option will exit the program in error.
+This isn't a real issue as "printing help" isn't exactly proper execution of the
+program, anyway.
+.
+.SH LICENSE
+See LICENSE.txt in the source.
+.
+.SH SEE ALSO
+.ad l
+.nh
+.
+.BR libmng (3),
+.BR libpng (3),
+.BR mng (5),
+.BR png (5).
+.
+.ad b
+.hy
