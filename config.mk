@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-g -std=c99 -Wall -Wpedantic
-LDFLAGS=
+LDFLAGS=-lmng -lpng
 
-PREFIX=/usr/local
-MANPREFIX=$(PREFIX)/share/man
+BIN=/usr/local/bin
+MAN1=/usr/local/share/man/man1
